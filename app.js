@@ -45,7 +45,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", home);
-// app.use("/documents", isAuthenticated, documents);
+app.use("/documents", isAuthenticated, documents);
 
 app.use(handleInvalidUrl);
 app.use(handleError);
