@@ -8,16 +8,13 @@ const documentSchema = new mongoose.Schema({
   title: {
     type: String,
     maxLength: 50,
-    required: true,
   },
   body: {
-    type: String,
-    maxLength: 300,
+    type: Object,
   },
   creator: {
     type: String,
     maxLength: 50,
-    required: true,
   },
   collaborator: {
     type: Array,
