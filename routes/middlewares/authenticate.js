@@ -4,22 +4,18 @@ async function authenticateJwt(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
-  try {
+  if (token) {
     const user = await admin.auth().verifyIdToken(token);
     req.user = user;
-  } catch (e) {
-    console.log(e);
   }
 
   next();
 }
 
-async function isAuthenticated(req, res, next) {
+function isAuthenticated(req, res, next) {
   if (!req.user) {
-    return;
+    return res.redirect("/");
   }
-
-  res.sendStatus(401);
 
   next();
 };
