@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("./config/firebaseAuth");
 
 const express = require("express");
 const path = require("path");
@@ -6,7 +7,7 @@ const cors = require("cors");
 
 const connectMongoDB = require("./config/db");
 
-const index = require("./routes/index");
+const home = require("./routes/home");
 const login = require("./routes/login");
 const logout = require("./routes/logout");
 const documents = require("./routes/documents");
@@ -15,17 +16,22 @@ const documents = require("./routes/documents");
 const handleInvalidUrl = require("./routes/middlewares/handleInvalidUrl");
 const handleError = require("./routes/middlewares/handleError");
 const Document = require("./models/Document");
+const { authenticateJwt } = require("./routes/middlewares/authenticate");
 
 const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true,
 };
 
+
+
 const app = express();
 
 connectMongoDB();
 
 app.use(cors(corsOptions));
+
+app.use(authenticateJwt);
 
 // app.io = require("socket.io")(process.env.PORT, {
 //   cors: {
@@ -42,7 +48,7 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/", index);
+app.use("/", home);
 app.use("/login", login);
 // app.use("/logout", authenticate, logout);
 // app.use("/documents", authenticate, documents);

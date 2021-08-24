@@ -11,3 +11,5 @@ exports.create = async function (req, res, next) {};
 exports.get = async function (req, res, next) {};
 
 exports.modify = async function (req, res, next) {};
+
+exports.delete = async function (req, res, next) {};
