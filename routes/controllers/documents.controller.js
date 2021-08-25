@@ -23,10 +23,6 @@ exports.modify = async function (req, res, next) {
   const body = req.body.body;
 
   try {
-    if (!mongoose.Types.ObjectId.isValid(_id)) {
-      throw createError(400, ERROR.INVALID_ACCESS);
-    }
-
     await Document.updateOne({ _id }, { body });
 
     res.sendStatus(200);
@@ -40,14 +36,10 @@ exports.modify = async function (req, res, next) {
 };
 
 exports.delete = async function (req, res, next) {
-  const documentId = req.params._id;
+  const _id = req.params._id;
 
   try {
-    if (!mongoose.Types.ObjectId.isValid(documentId)) {
-      throw createError(400, ERROR.INVALID_ACCESS);
-    }
-
-    await Document.deleteOne({ _id: documentId });
+    await Document.deleteOne({ _id: _id });
 
     res.status(200);
   } catch (err) {
