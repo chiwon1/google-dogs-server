@@ -6,11 +6,15 @@ const Document = require("../../models/Document");
 
 const ERROR = require("../../constants/errorConstants");
 
-exports.create = async function (req, res, next) {};
+exports.create = async function (req, res, next) { };
 
-exports.get = async function (req, res, next) {};
+exports.get = async function (req, res, next) {
+  const documents = await Document.find({ creator: req.user.uid });
 
-exports.modify = async function (req, res, next) {};
+  res.send({ documents });
+};
+
+exports.modify = async function (req, res, next) { };
 
 exports.delete = async function (req, res, next) {
   const documentId = req.params._id;

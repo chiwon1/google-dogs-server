@@ -3,6 +3,7 @@ require("./config/firebaseAuth");
 
 const express = require("express");
 const path = require("path");
+const cors = require("cors");
 const { isEqual } = require("lodash");
 
 const connectMongoDB = require("./config/db");
@@ -18,6 +19,8 @@ const { authenticateJwt, isAuthenticated } = require("./routes/middlewares/authe
 const app = express();
 
 connectMongoDB();
+
+app.use(cors({ origin: process.env.CLIENT_URL }))
 
 app.use(authenticateJwt);
 
@@ -39,11 +42,11 @@ app.io = require("socket.io")({
   },
 });
 
-const defaultValue = "";
+const defaultValue = { ops: [{ insert: "" }] };
 
 app.io.on("connection", function (socket) {
-  socket.on("get-document", async function (documentId) {
-    const document = await findOrCreateDocument(documentId);
+  socket.on("get-document", async function ({ documentId, creator }) {
+    const document = await findOrCreateDocument(documentId, creator);
 
     socket.join(documentId);
 
@@ -64,7 +67,7 @@ app.io.on("connection", function (socket) {
   })
 });
 
-async function findOrCreateDocument(id) {
+async function findOrCreateDocument(id, creator = "") {
   if (!id) {
     return;
   }
@@ -75,7 +78,11 @@ async function findOrCreateDocument(id) {
     return document;
   }
 
-  return await Document.create({ _id: id, body: defaultValue });
+  return await Document.create({
+    _id: id,
+    body: defaultValue,
+    creator,
+  });
 }
 
 module.exports = app;
