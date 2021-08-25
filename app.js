@@ -3,6 +3,7 @@ require("./config/firebaseAuth");
 
 const express = require("express");
 const path = require("path");
+const { isEqual } = require("lodash");
 
 const connectMongoDB = require("./config/db");
 
@@ -55,7 +56,12 @@ app.io.on("connection", function (socket) {
     });
 
     socket.on("save-document", async function (body) {
-      await Document.findByIdAndUpdate(documentId, { body });
+      const previousDocument = await Document.findById(documentId);
+      const previousBody = previousDocument.body;
+
+      if (!isEqual(previousBody, body)) {
+        await Document.findByIdAndUpdate(documentId, { body });
+      }
     });
   })
 });
