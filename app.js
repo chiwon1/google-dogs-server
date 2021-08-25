@@ -7,7 +7,6 @@ const { isEqual } = require("lodash");
 
 const connectMongoDB = require("./config/db");
 
-const home = require("./routes/home");
 const documents = require("./routes/documents");
 
 // const authenticate = require("./routes/middlewares/authenticate");
@@ -29,7 +28,6 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/", home);
 app.use("/documents", isAuthenticated, documents);
 
 app.use(handleInvalidUrl);
