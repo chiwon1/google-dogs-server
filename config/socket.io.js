@@ -10,61 +10,69 @@ function connectSocketIo(app) {
 
   const defaultValue = { ops: [{ insert: "" }] };
 
-  app.io.on("connection", function (socket) {
-    socket.on("get-document", async function ({ documentId, creator, displayName }) {
-      const document = await findOrCreateDocument(documentId, creator);
+  try {
+    app.io.on("connection", function (socket) {
+      socket.on("get-document", async function ({ documentId, creator, displayName }) {
+        const document = await findOrCreateDocument(documentId, creator);
 
-      socket.join(documentId);
+        socket.join(documentId);
 
-      socket.broadcast.to(documentId).emit("user-join", { id: socket.id, nickname: displayName });
+        socket.broadcast.to(documentId).emit("user-join", { id: socket.id, nickname: displayName });
 
-      socket.nickname = displayName;
+        socket.nickname = displayName;
 
-      const clients = Array.from(app.io.sockets.adapter.rooms.get(documentId)).filter(ele => ele !== socket.id);
+        const clients = Array.from(app.io.sockets.adapter.rooms.get(documentId)).filter(ele => ele !== socket.id);
 
-      const users = clients.map(client => ({ id: client, nickname: app.io.sockets.sockets.get(client).nickname }));
+        const users = clients.map(client => ({ id: client, nickname: app.io.sockets.sockets.get(client).nickname }));
 
-      socket.emit("load-collaborator", users);
+        socket.emit("load-collaborator", users);
 
-      socket.emit("load-document", document.body);
+        socket.emit("load-document", document.body);
 
-      socket.on("send-selection", function (data) {
-        socket.broadcast.to(documentId).emit("receive-selection", data);
-      });
+        socket.on("send-selection", function (data) {
+          socket.broadcast.to(documentId).emit("receive-selection", data);
+        });
 
-      socket.on("send-changes", function (delta) {
-        socket.broadcast.to(documentId).emit("receive-changes", delta);
-      });
+        socket.on("send-changes", function (delta) {
+          socket.broadcast.to(documentId).emit("receive-changes", delta);
+        });
 
-      socket.on("save-document", async function (body) {
-        const previousDocument = await Document.findById(documentId);
-        const previousBody = previousDocument.body;
+        socket.on("save-document", async function (body) {
+          const previousDocument = await Document.findById(documentId);
+          const previousBody = previousDocument.body;
 
-        if (!isEqual(previousBody, body)) {
-          await Document.findByIdAndUpdate(documentId, { body });
-        }
-      });
-    })
-  });
+          if (!isEqual(previousBody, body)) {
+            await Document.findByIdAndUpdate(documentId, { body });
+          }
+        });
+      })
+    });
+  } catch (err) {
+    console.log("err");
+  }
 
   async function findOrCreateDocument(id, creator = "") {
     if (!id) {
       return;
     }
 
-    const document = await Document.findById(id);
+    try {
+      const document = await Document.findById(id);
 
-    if (document) {
-      return document;
+      if (document) {
+        return document;
+      }
+
+      return await Document.create({
+        _id: id,
+        body: defaultValue,
+        creator,
+      });
+
+    } catch (err) {
+      console.log("err");
     }
-
-    return await Document.create({
-      _id: id,
-      body: defaultValue,
-      creator,
-    });
   }
-
 };
 
 module.exports = connectSocketIo;

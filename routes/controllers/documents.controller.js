@@ -6,8 +6,6 @@ const Document = require("../../models/Document");
 
 const ERROR = require("../../constants/errorConstants");
 
-exports.create = async function (req, res, next) { };
-
 exports.getMyDocuments = async function (req, res, next) {
   try {
     const documents = await Document.find({ creator: req.user.uid });
