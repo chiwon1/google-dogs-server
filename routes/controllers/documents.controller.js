@@ -14,7 +14,14 @@ exports.get = async function (req, res, next) {
   res.send({ documents });
 };
 
-exports.modify = async function (req, res, next) { };
+exports.modify = async function (req, res, next) {
+  const _id = req.params._id;
+  const body = req.body.body;
+
+  await Document.updateOne({ _id }, { body });
+
+  res.sendStatus(200);
+};
 
 exports.delete = async function (req, res, next) {
   const documentId = req.params._id;
