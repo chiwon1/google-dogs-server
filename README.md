@@ -18,6 +18,8 @@
 
 **MERN Stack**과 socket.io를 이용한 문서작업용 실시간 협업 툴 web application
 
+![Nov-04-2021 14-48-23](https://user-images.githubusercontent.com/77020787/140264481-401ef37c-c815-464c-8103-e3e94b1eb2da.gif)
+
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary>Table of Contents</summary>
@@ -29,6 +31,33 @@
     <li><a href="#demo">Demo</a></li>
   </ol>
 </details>
+
+## Function
+ - 구글을 이용한 소셜 로그인
+ - 로그인한 유저가 생성한 문서 목록 확인 가능
+ - 문서 URL을 공유하여 다른 사람들과 동시 작업 가능
+ - 수동 저장 또는 20초에 한번 자동 저장
+
+## UI example
+
+#### 문서 작성 예시 UI
+
+![GoolgeDocs](./readme-assets/ui_example_editing.png)
+
+#### 문서 목록 예시 UI
+
+![GoolgeDocs](./readme-assets/ui_example_list.png)
+
+#### 동시접속 실시간 커서 예시 UI
+
+![GoolgeDocs](./readme-assets/ui_example_realtime-cursor.png)
+
+## Demo
+
+https://elegant-boyd-64c1c7.netlify.app/
+
+(Client - netlify, Server - heroku)
+
 
 ## Installation
 
@@ -59,28 +88,3 @@ npm start
 // localhost:3000
 ```
 
-## UI example
-
-#### 문서 작성 예시 UI
-
-![GoolgeDocs](./readme-assets/ui_example_editing.png)
-
-#### 문서 목록 예시 UI
-
-![GoolgeDocs](./readme-assets/ui_example_list.png)
-
-#### 동시접속 실시간 커서 예시 UI
-
-![GoolgeDocs](./readme-assets/ui_example_realtime-cursor.png)
-
-## Function
- - 구글을 이용한 소셜 로그인
- - 로그인한 유저가 생성한 문서 목록 확인 가능
- - 문서 URL을 공유하여 다른 사람들과 동시 작업 가능
- - 수동 저장 또는 20초에 한번 자동 저장
-
-## Demo
-
-https://elegant-boyd-64c1c7.netlify.app/
-
-(Client - netlify, Server - heroku)
